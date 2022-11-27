@@ -1,4 +1,4 @@
-<!-- Google tag (gtag.js) -->
+<!-- Google tag (gtag.js) - Untuk Google Analytics-->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-6RYKF6ZF5T"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -35,6 +35,27 @@ if(isset($_GET["status"]))
   }
 }
 
+function get_CURL($url) 
+{
+  $curl = curl_init();
+  curl_setopt($curl, CURLOPT_URL, $url); // connect ke API nya
+  curl_setopt($curl, CURLOPT_RETURNTRANSFER, true); //untuk return hasilnya menjadi text/json
+  $result = curl_exec($curl); // eksekusi curl-nya
+  curl_close($curl);
+
+  return json_decode($result,true);
+}
+
+$ytChannel = get_CURL('https://www.googleapis.com/youtube/v3/channels?part=snippet,statistics&id=UCQe5zugcV-ODMtiWkRUHEKQ&key=AIzaSyBuUeZj3FIzIlQtDNlCj_wSuH85lh0z6r8');
+
+
+$ytProfileName = $ytChannel['items'][0]['snippet']['title'];
+$ytProfilePic = $ytChannel['items'][0]['snippet']['thumbnails']['medium']['url'];
+$ytSubsCount = $ytChannel['items'][0]['statistics']['subscriberCount'];
+
+$ytVideo = get_CURL('https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=UCQe5zugcV-ODMtiWkRUHEKQ&maxResults=1&order=date&key=AIzaSyBuUeZj3FIzIlQtDNlCj_wSuH85lh0z6r8');
+
+$firstVideoId = $ytVideo['items'][0]['id']['videoId'];
 
 ?>
 <!DOCTYPE html>
@@ -900,6 +921,55 @@ if(isset($_GET["status"]))
         </div>
       </section>
       <!-- End Contact Section -->
+
+      <!-- ======= Resume Section ======= -->
+      <section id="resume" class="resume">
+        <div class="container" data-aos="fade-up">
+          <div class="section-title">
+            <h2>Social Media - API</h2>
+            <p>
+              Section ini memuat media sosial yang saya memiliki dan jumlah follower atau subscribernya berapa. Data yang ada di section ini saya ambil menggunakan API Google (khususnya Youtube) dan Instagram. API saya implementasikan menggunakan PHP dengan metode cURL.
+            </p>
+          </div>
+
+          <div class="row">
+            <div class="col-lg-6">
+              <div class="row justify-content-center align-items-center g-2">
+                <div class="col text-center">
+                  <h5><?= $ytProfileName ?></h5>
+                  <img src="<?= $ytProfilePic ?>" alt="" width="150px" class="img-thumbnail rounded-circle mb-3">
+                  <p><?= $ytSubsCount ?> Subscriber</p>
+                  <div class="embed-responsive embed-responsive-16by9">
+                    <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/<?=$firstVideoId?>?rel=0" allowfullscreen></iframe>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <div class="row justify-content-center align-items-center g-2">
+                <div class="col text-center">
+                  <h5>@fachrizaall_</h5>
+                  <img src="assets/img/profile-img.jpg" alt="" width="150px" class="img-thumbnail rounded-circle mb-3">
+                  <p>500 Followers</p>
+                  <div class="row justify-content-center">
+                    <div class="col-md-4">
+                      <img src="assets/img/portfolio/knight1.png" alt="" width="150px">
+                    </div>
+                    <div class="col-md-4">
+                      <img src="assets/img/portfolio/knight2.png" alt="" width="150px">
+                    </div>
+                    <div class="col-md-4">
+                      <img src="assets/img/portfolio/knight3.png" alt="" width="150px">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- End Resume Section -->
+
     </main>
     <!-- End #main -->
 
